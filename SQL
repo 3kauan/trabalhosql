@@ -1,0 +1,87 @@
+DROP TABLE IF EXISTS professores;
+DROP TABLE IF EXISTS alunos;
+DROP TABLE IF EXISTS cursos;
+DROP TABLE IF EXISTS matriculas;
+DROP TABLE IF EXISTS certificados;
+DROP TABLE IF EXISTS pagamentos;
+
+CREATE TABLE professores (
+    id_professor INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    especialidade TEXT,
+    email TEXT
+);
+
+CREATE TABLE alunos (
+    id_aluno INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT,
+    telefone TEXT,
+    data_nascimento DATE
+);
+
+CREATE TABLE cursos (
+    id_curso INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    area TEXT,
+    carga_horaria INT,
+    id_professor INTEGER,
+    FOREIGN KEY (id_professor) REFERENCES professores(id_professor)
+);
+
+CREATE TABLE matriculas (
+    id_matricula INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_aluno INTEGER,
+    id_curso INTEGER,
+    data_matricula DATE,
+    status TEXT,
+    FOREIGN KEY (id_aluno) REFERENCES alunos(id_aluno),
+    FOREIGN KEY (id_curso) REFERENCES cursos(id_curso)
+);
+
+CREATE TABLE certificados (
+    id_certificado INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_matricula INTEGER,
+    data_emissao DATE,
+    codigo_validacao TEXT,
+    FOREIGN KEY (id_matricula) REFERENCES matriculas(id_matricula)
+);
+
+CREATE TABLE pagamentos (
+    id_pagamento INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_matricula INTEGER,
+    valor REAL,
+    data_pagamento DATE,
+    status TEXT,
+    FOREIGN KEY (id_matricula) REFERENCES matriculas(id_matricula)
+);
+
+INSERT INTO professores (nome, especialidade, email) VALUES
+('Carlos Henrique', 'Banco de Dados', 'carlos@gmail.com'),
+('Mariana Souza', 'Programação Web', 'mariana@gmail.com'),
+('João Pedro', 'Cybersecurity', 'joao@gmail.com');
+
+INSERT INTO alunos (nome, email, telefone, data_nascimento) VALUES
+('Lucas Silva', 'lucas@gmail.com', '31999999999', '2005-03-15'),
+('Ana Clara', 'ana@gmail.com', '31988888888', '2004-07-21'),
+('Pedro Lima', 'pedro@gmail.com', '31977777777', '2006-01-10');
+
+INSERT INTO cursos (nome, area, carga_horaria, id_professor) VALUES
+('SQL Básico', 'Banco de Dados', 40, 1),
+('HTML e CSS', 'Desenvolvimento Web', 30, 2),
+('Introdução à Segurança', 'Cybersecurity', 50, 3);
+
+INSERT INTO matriculas (id_aluno, id_curso, data_matricula, status) VALUES
+(1, 1, '2026-05-10', 'Ativa'),
+(2, 2, '2026-05-11', 'Ativa'),
+(3, 3, '2026-05-12', 'Pendente');
+
+INSERT INTO certificados (id_matricula, data_emissao, codigo_validacao) VALUES
+(1, '2026-06-01', 'CERT123'),
+(2, '2026-06-02', 'CERT456'),
+(3, '2026-06-03', 'CERT789');
+
+INSERT INTO pagamentos (id_matricula, valor, data_pagamento, status) VALUES
+(1, 199.90, '2026-05-10', 'Pago'),
+(2, 149.90, '2026-05-11', 'Pago'),
+(3, 299.90, '2026-05-12', 'Pendente');
